@@ -1,2 +1,53 @@
-{% extends 'base.html' %}
+{% extends './base.html' %}
 
+{% block title %} Aircraft Search {% endblock %}
+
+
+{% block content %}
+
+
+<!-- {{data}}-->
+<!--{{data}}-->
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Tail number</th>
+      <th scope="col">Serial number</th>
+      <th scope="col">Aircraft type name</th>
+      <th scope="col">Year of production</th>
+      <th scope="col">Image #1</th>
+      <th scope="col">Image #2</th>
+      <th scope="col">Image #3</th>
+
+    </tr>
+  </thead>
+  <tbody>
+  {% for item in data %}
+
+            <tr>
+                <td>{{ item.tail_number }}</td>
+                <td>{{ item.serial_number }}</td>
+                <td>{{ item.aircraft_type_name }}</td>
+                <td>{{ item.year_of_production }}</td>
+                {% for img in item.images %}
+                    {% if forloop.counter <= 3 %}
+                        <td><img src="{{ img.url }}" width="150" height="150"></td>
+                    {% endif %}
+
+                {% endfor %}
+            </tr>
+
+  {% endfor %}
+
+</table>
+
+{{page_obj}}
+# Button succes
+<button type="button" class="btn btn-success">Success</button>
+
+# input
+<div class="input-group input-group-lg">
+  <span class="input-group-text" id="inputGroup-sizing-lg">Large</span>
+  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+</div>
+{% endblock %}
