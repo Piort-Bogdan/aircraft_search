@@ -4,5 +4,5 @@ from .views import search_aircraft
 
 urlpatterns = [
 
-    path('search/', search_aircraft),
+    path('api/', search_aircraft),
 ]

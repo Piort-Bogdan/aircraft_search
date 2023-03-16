@@ -4,10 +4,18 @@
 
 
 {% block content %}
+{% csrf_token %}
+<!--# search input-->
+<form action=""  method="GET">
+<div class="input-group input-group-lg">
+  <span class="input-group-text" id="inputGroup-sizing-lg">Search</span>
+  <input type="text" minlength="2" class="form-control" name="search" aria-label="Sizing example input"
+         aria-describedby="inputGroup-sizing-lg">
+</div>
 
-
-<!-- {{data}}-->
-<!--{{data}}-->
+<!--# Button succes-->
+<button type="submit" class="btn btn-success">Search</button>
+</form>
 <table class="table">
   <thead>
     <tr>
@@ -22,7 +30,7 @@
     </tr>
   </thead>
   <tbody>
-  {% for item in data %}
+  {% for item in page_obj %}
 
             <tr>
                 <td>{{ item.tail_number }}</td>
@@ -41,13 +49,41 @@
 
 </table>
 
-{{page_obj}}
-# Button succes
-<button type="button" class="btn btn-success">Success</button>
+<nav aria-label="">
+  <ul class="pagination">
+      {% if current_page == 1 %}
+        <li class="page-item disabled">
+      {% else %}
+        <li class="page-item">
+      {% endif %}
+      <a class="page-link" href="?page={{ current_page|add:"-1" }}">Previous</a>
+    </li>
+      {% for p in page_obj.paginator.page_range %}
+        {% if current_page == p %}
+            <li class="page-item disabled" aria-current="page">
+        {% else %}
+            <li class="page-item">
+        {% endif %}
+      <a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
+      {% endfor %}
+      <a class="page-link" href="?page={{ current_page|add:"1" }}">Next</a>
+    </li>
+  </ul>
+</nav>
 
-# input
-<div class="input-group input-group-lg">
-  <span class="input-group-text" id="inputGroup-sizing-lg">Large</span>
-  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+
+<!--#выплывающее меню-->
+<p>
+  <a data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+    Link with href
+  </a>
+  <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+    Button with data-bs-target
+  </button>
+</p>
+<div class="collapse" id="collapseExample">
+  <div class="card card-body">
+    Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
+  </div>
 </div>
 {% endblock %}
