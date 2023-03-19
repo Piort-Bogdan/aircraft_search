@@ -49,9 +49,9 @@
 
         </tr>
         {% for company in companies %}
+        {% for airport in airports %}
             {% if company.company_id == item.company_id %}
-                {% for airport in airports %}
-                    {% if airport.icao == item.home_base %}
+                {% if airport.icao == item.home_base %}
                     <tr class="collapse" id="{{ item.serial_number }}">
                         <td colspan="7"><div class="collapse" id="{{ item.serial_number }}">
                             <div class="card card-body">Aircraft class: {{ item.aircraft_class_name }}</div>
@@ -66,9 +66,11 @@
                             <div class="card card-body">Home base: {{ item.home_base }} </div>
                         </td>
                     </tr>
-                    {% endif %}
-                {% endfor %}
+
+                {% endif %}
+
             {% endif %}
+        {% endfor %}
         {% endfor %}
     {% endfor %}
     </tbody>
