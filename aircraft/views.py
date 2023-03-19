@@ -1,7 +1,6 @@
 import json
 import requests
 import concurrent.futures
-import threading
 
 from django.shortcuts import render
 from django.core.paginator import Paginator
@@ -11,6 +10,8 @@ from django.views.generic import TemplateView
 
 class AircraftList(TemplateView):
 
+    ''' Aicraft API list View '''
+
     template_name = 'aircraft/search_aircraft.html'
     headers = {'Authorization': 'Token BN442rPF4zTfWAGQDqrZgjRWKznDfxUg9VK'}
     url = 'https://dir.aviapages.com/api/'
@@ -18,6 +19,8 @@ class AircraftList(TemplateView):
     def get(self, request, *args, **kwargs):
 
         def get_aircraft_list(page):
+
+            ''' getting aircraft list '''
 
             data = []
             try:
@@ -43,9 +46,11 @@ class AircraftList(TemplateView):
             for f in concurrent.futures.as_completed(future):
                 result = f.result()
                 data += result
-            print(len(data))
 
-        def get_company_list(data):
+        def get_company_detail(data):
+
+            ''' getting company detail information '''
+
             companies_list = []
             for company in data:
                 try:
@@ -56,24 +61,18 @@ class AircraftList(TemplateView):
                     for company_json in companies:
                         companies_list.append(company_json)
                 except Exception as e:
-                    print('не вышло', e)
-            print(len(companies_list))
+                    print(f'Company detail getting error - {e}')
             return companies_list
 
 
         companies_list = []
-        #
-        #     # 181
-        #
-        #     for company in concurrent.futures.as_completed(companies):
-        #         result = company.result()
-        #         companies_list += result
-        # print(len(companies_list))
 
-        def get_airport_list(data):
+        def get_airport_detail(data):
+
+            ''' getting airport detail information '''
+
             airport_list = []
             for icao in data:
-                print('--', icao['home_base'])
                 try:
                     url_airports = self.url + 'airports/'
                     params_airport = {'search_icao': icao['home_base']}
@@ -81,37 +80,11 @@ class AircraftList(TemplateView):
                     airports = json.loads(response.text)['results']
                     for airport in airports:
                         airport_list.append(airport)
-                        # print(airport_list)
                 except Exception as e:
-                    print(f'не вышло')
-            print(len(airport_list))
+                    print(f'Airport detail gettin error - {e}')
             return airport_list
         airport_list = []
-        # with concurrent.futures.ThreadPoolExecutor() as executor:
-        #     airports = executor.submit(get_airport_list, data) # 610
-        #     for airport in concurrent.futures.as_completed(airports):
-        #         result = airport.result()
-        #         airport_list += result
-        # print(len(airport_list))
 
-
-        # with concurrent.futures.ThreadPoolExecutor() as executor:
-        #     airports = executor.submit(get_airport_list, data)
-        #     companies = executor.submit(get_company_list, data)
-        #       # 610
-        #     for company in concurrent.futures.as_completed(companies):
-        #         try:
-        #             result = company.result()
-        #             companies_list += result
-        #         except Exception as e:
-        #             print(f'eroe {e}')
-        #     for airport in concurrent.futures.as_completed(airports):
-        #         try:
-        #             result = airport.result()
-        #             airport_list += result
-        #         except Exception as ee:
-        #             print(f'eee {ee}')
-        # paginator
         paginator = Paginator(data, 300)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
@@ -125,23 +98,7 @@ class AircraftList(TemplateView):
             'data': data,
             'page_obj': page_obj,
             'current_page': current_page,
-            'companies': get_company_list(page_obj),
-            'airports': get_airport_list(page_obj)
+            'companies': get_company_detail(page_obj),
+            'airports': get_airport_detail(page_obj)
         }
         return render(request, self.template_name, context)
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['data'] = self.get_list(request)
-    #     return context
-    #
-    #     # paginator
-    #     paginator = Paginator(data, 300)
-    #     page_number = request.GET.get('page')
-    #     page_obj = paginator.get_page(page_number)
-    #
-    #     try:
-    #         current_page = int(page_number)
-    #     except:
-    #         current_page = 1
-
