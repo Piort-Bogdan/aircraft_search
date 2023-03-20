@@ -49,7 +49,7 @@
 
         </tr>
         {% for company in companies %}
-        {% for airport in airports %}
+            {% for airport in airports %}
             {% if company.company_id == item.company_id %}
                 {% if airport.icao == item.home_base %}
                     <tr class="collapse" id="{{ item.serial_number }}">
@@ -62,15 +62,13 @@
                             <div class="card card-body">Airports: </div>
                             <div class="card card-body">ICAO: {{ airport.icao }}</div>
                             <div class="card card-body">IATA: {{ airport.iata }}</div>
-                            <div class="card card-body">Airport name: {{ airport.name }} </div>
-                            <div class="card card-body">Home base: {{ item.home_base }} </div>
+                            <div class="card card-body">Airport name: {{ airport.name }}</div>
+                            <div class="card card-body">Home base: {{ item.home_base }}</div>
                         </td>
                     </tr>
-
                 {% endif %}
-
             {% endif %}
-        {% endfor %}
+            {% endfor %}
         {% endfor %}
     {% endfor %}
     </tbody>
