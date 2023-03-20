@@ -13,8 +13,7 @@ class AircraftList(TemplateView):
     ''' Aicraft API list View '''
 
     template_name = 'aircraft/search_aircraft.html'
-    # HEADERS = {'Authorization': API_TOKEN}
-    HEADERS = {'Authorization': 'Token BN442rPF4zTfWAGQDqrZgjRWKznDfxUg9VK'}
+    HEADERS = {'Authorization': API_TOKEN}
     URL = 'https://dir.aviapages.com/api/'
 
     def get(self, request, *args, **kwargs):
@@ -133,3 +132,4 @@ class AircraftList(TemplateView):
         response = requests.get(url, headers=self.HEADERS, params=params)
         count = json.loads(response.text)['count']/20
         return count
+
